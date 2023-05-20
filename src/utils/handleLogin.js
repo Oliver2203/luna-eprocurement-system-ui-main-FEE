@@ -1,6 +1,6 @@
 import axios from '~/api/axios';
 
-const LOGIN_URL = '/auth/register';
+const LOGIN_URL = '/auth/login';
 
 const handleLogin = async (email, password, setError) => {
   try {

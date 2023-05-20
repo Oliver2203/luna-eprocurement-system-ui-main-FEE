@@ -2,10 +2,16 @@ import { useState, useEffect } from 'react';
 import handleInput from '~/utils/validator';
 import Input from '~/components/Input';
 import PrimaryButton from '~/components/PrimaryButton';
+import handleCreateEntity from '~/utils/handleCreateEntity';
+import { useNavigate } from 'react-router-dom';
 
 function CreateEntity({ setToken, entity }) {
   // Set page title
-  document.title = 'Create Entity';
+  useEffect(() => {
+    document.title = 'Create Entity';
+  }, []);
+
+  const navigate = useNavigate();
 
   const [entityCode, setEntityCode] = useState('');
   const [bussinessNum, setBussinessNum] = useState('');
@@ -32,6 +38,11 @@ function CreateEntity({ setToken, entity }) {
     });
 
     if (entityCode === undefined && bussinessNumError === undefined) {
+      const res = handleCreateEntity(bussinessNum, entityCode, setError);
+
+      if (res) {
+        navigate('/');
+      }
     }
   };
 

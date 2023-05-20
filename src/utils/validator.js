@@ -20,7 +20,7 @@ const validatorRules = {
   },
   entityCode(value) {
     // eslint-disable-next-line
-    const ENTITY_REGEX = /^[a-zA-z0-9].{2,5}$/i;
+    const ENTITY_REGEX = /^[a-zA-Z0-9].{2,5}$/i;
     return ENTITY_REGEX.test(value)
       ? undefined
       : 'Invalid Entity Code (must be in alphanumeric and between 3 and 6 digits)';
