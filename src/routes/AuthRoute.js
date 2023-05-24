@@ -4,7 +4,11 @@ import useToken from '~/utils/useToken';
 function AuthRoute({ children }) {
   const token = useToken().token;
 
-  return token ? <Navigate to="/" /> : children;
+  if (!token) {
+    return <>{children}</>;
+  }
+
+  return <Navigate to="/" />;
 }
 
 export default AuthRoute;

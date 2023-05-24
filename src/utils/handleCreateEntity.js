@@ -1,11 +1,10 @@
 import axios from '~/api/axios';
-
 const CREATE_ENTITY_URL = '/api/entity/create-entity';
 
-const handleCreateEntity = async (name, code, setError) => {
+const handleCreateEntity = async (name, code, setError, token) => {
   try {
     const res = await axios.post(CREATE_ENTITY_URL, JSON.stringify({ name, code }), {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       withCredentials: true,
     });
     if (res?.status === 200) {
@@ -24,8 +23,8 @@ const handleCreateEntity = async (name, code, setError) => {
       });
     } else {
       setError({
-        entity: 'Login failed',
-        businessNum: 'Login failed',
+        entity: 'Create failed',
+        businessNum: 'Create failed',
       });
     }
   }

@@ -91,10 +91,10 @@ const USER_LIST = [
 
 const DEPARTMENT_LIST = [
   'RMIT Business Center',
-  'KHTN Business Center',
-  'Ulaw Bussiness Center',
-  'HCMUTE BussinessCenter',
-  'HCMUT Fuck Fuck',
+  'RMIT Business Build 2',
+  'RMIT Business Build 1',
+  'RMIT Business Build 8',
+  
 ];
 
 const TEAM_LIST = ['Team A', 'Team B'];

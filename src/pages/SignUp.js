@@ -4,8 +4,9 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import handleInput from '~/utils/validator';
 import handleSignUp from '~/utils/handleSignUp';
 import PrimaryButton from '~/components/PrimaryButton';
+import handleLogin from '~/utils/handleLogin';
 
-function SignUp() {
+function SignUp({ setToken }) {
   // Set document title
   document.title = 'Sign Up';
 
@@ -42,15 +43,21 @@ function SignUp() {
       // Go to handle sign up to check on call api
       const res = await handleSignUp(email, name, password, setError);
 
-      if (res.status === 200) {
-        navigate('/create-entity');
+      if (res) {
+        const token = await handleLogin(email, password);
+
+        if (token) {
+          setToken(token);
+
+          navigate('/create-entity');
+        }
       }
     }
   };
 
   return (
     <>
-      <h1 className="font-bold font-inter text-3xl ">Sign up</h1>
+      <h1 className="font-bold font-inter text-3xl">Sign up</h1>
       <div className="flex flex-col gap-4 mt-10">
         <Input
           label="Email"

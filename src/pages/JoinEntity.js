@@ -1,21 +1,36 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Input from '~/components/Input';
 import PrimaryButton from '~/components/PrimaryButton';
+import handleJoinEntity from '~/utils/handleJoinEntity';
+import useToken from '~/utils/useToken';
+import handleInput from '~/utils/validator';
 
 function JoinEntity({ setToken, setEntity }) {
   // Set document title
   document.title = 'Join Entity';
+  const {token } = useToken();
+  const navigate = useNavigate();
 
   const [entityCode, setEntityCode] = useState('');
-
   const [error, setError] = useState('');
 
   useEffect(() => {
     setError('');
   }, [entityCode]);
 
-  const handleSubmit = () => {
-    console.log('Hello');
+  const handleSubmit = async () => {
+    const entityCodeError = handleInput(entityCode, 'required', 'entityCode');
+
+    setError(entityCodeError);
+
+    if (entityCodeError === undefined) {
+      const res = await handleJoinEntity(entityCode, token );
+
+      if (res) {
+        navigate('/');
+      }
+    }
   };
 
   return (
@@ -28,7 +43,7 @@ function JoinEntity({ setToken, setEntity }) {
         value={entityCode}
         error={error}
       />
-      <PrimaryButton onClick={handleSubmit}>Create a Legal Entity</PrimaryButton>
+      <PrimaryButton onClick={handleSubmit}>Join a Legal Entity</PrimaryButton>
     </div>
   );
 }

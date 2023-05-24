@@ -10,6 +10,7 @@ import EntityLayout from '~/components/Layout/EntityLayout';
 // Import Route orders
 import AuthRoute from './AuthRoute';
 import PrivateRoute from './PrivateRoute';
+import EntityRoute from './EntityRoute';
 
 // Import Pages
 import SignIn from '~/pages/SignIn';
@@ -21,6 +22,7 @@ import UserList from '~/pages/UserList';
 import Teams from '~/pages/Teams';
 import ConfigureRoles from '~/pages/ConfigureRoles';
 import Settings from '~/pages/Settings';
+import JoinEntity from '~/pages/JoinEntity';
 
 function Routing() {
   const { setToken } = useToken();
@@ -39,21 +41,21 @@ function Routing() {
     {
       path: '/create-entity',
       element: (
-        <AuthRoute>
+        <EntityRoute>
           <EntityLayout>
-            <CreateEntity setToken={setToken} />
+            <CreateEntity />
           </EntityLayout>
-        </AuthRoute>
+        </EntityRoute>
       ),
     },
     {
       path: '/join-entity',
       element: (
-        <AuthRoute>
-          <AuthLayout>
-            <SignIn setToken={setToken} />
-          </AuthLayout>
-        </AuthRoute>
+        <EntityRoute>
+          <EntityLayout>
+            <JoinEntity />
+          </EntityLayout>
+        </EntityRoute>
       ),
     },
     {
@@ -61,7 +63,7 @@ function Routing() {
       element: (
         <AuthRoute>
           <AuthLayout>
-            <SignUp />
+            <SignUp setToken={setToken} />
           </AuthLayout>
         </AuthRoute>
       ),

@@ -10,7 +10,7 @@ const handleLogin = async (email, password, setError) => {
       withCredentials: true,
     });
     if (res?.status === 200) {
-      return res.data;
+      return res.data.accessToken;
     }
   } catch (err) {
     if (!err?.res) {
