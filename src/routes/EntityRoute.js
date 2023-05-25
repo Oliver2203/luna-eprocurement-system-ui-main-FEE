@@ -1,16 +1,16 @@
 import { Navigate } from 'react-router-dom';
-import useData from '~/utils/useData';
+import useUserInfo from '~/utils/useUserInfo';
 import useToken from '~/utils/useToken';
 
 function EntityRoute({ children }) {
   const { token } = useToken();
-  const { data } = useData();
+  const { userInfo } = useUserInfo();
 
   if (!token) {
     return <Navigate to="/sign-in" />;
   }
 
-  if (!data || data?.legalEntityCode === null) {
+  if (!userInfo || userInfo?.legalEntityCode === null) {
     return <>{children}</>;
   }
 

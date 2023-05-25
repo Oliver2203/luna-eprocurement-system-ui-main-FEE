@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import ActionButton from '~/components/ActionButton';
-import { USER_LIST } from '~/components/Data';
 import Modal from '~/components/Modal';
 import ModalUserInfo from '~/components/ModalUserInfo';
 import Pagination from '~/components/Pagination';
+import handleUserList from '~/utils/handleUserList';
 import useMountTransition from '~/utils/useMountTransition';
+import useToken from '~/utils/useToken';
+import useUserInfo from '~/utils/useUserInfo';
 
 function UserList() {
   const [userList, setUserList] = useState([]);
@@ -12,11 +14,21 @@ function UserList() {
   const [modalState, setModalState] = useState(false);
   const [currentModal, setCurrentModal] = useState();
 
+  const { token } = useToken();
+  const { userInfo } = useUserInfo();
+
   const hasTransitionedIn = useMountTransition(modalState, 200);
 
   useEffect(() => {
-    setUserList(USER_LIST);
-  }, []);
+    const fetchData = async () => {
+      const res = await handleUserList(userInfo?.legalEntityCode, token);
+
+      // remove current user from the list
+      const users = res.data.filter((user) => user.email !== userInfo.email);
+      setUserList(users);
+    };
+    fetchData();
+  }, [token, userInfo]);
 
   const handleOpen = (id) => {
     setModalState(true);
@@ -51,13 +63,13 @@ function UserList() {
       </div>
       <div className="line"></div>
       <div className="grid user-list-columns px-11 bg-white">
-        {currentUsersList.map((user) => {
+        {currentUsersList.map((user, idx) => {
           return (
-            <div key={user.id} className="contents">
+            <div key={idx} className="contents">
               <div className="flex gap-[18px] h-20 items-center">
                 <img src="/images/user-portrait.png" alt="" className="w-[46px]" />
                 <div className="text-sm leading-5 font-inter">
-                  <h3 className="text-black font-medium">{user.name}</h3>
+                  <h3 className="text-black font-medium">{user.username}</h3>
                   <p className="text-mainText">{user.email}</p>
                 </div>
               </div>
@@ -101,7 +113,8 @@ function UserList() {
         setCurrentPage={setCurrentPage}
         currentPage={currentPage}
       />
-      <div className="pt-5 bg-white"></div>
+      {currentUsersList.length === 0 && <h1 className="font-inter font-medium text-center py-4 bg-white"> This entity currently has no member available</h1> }
+      {usersPerPage < currentUsersList.length && <div className="pt-5 bg-white"></div> }
     </div>
   );
 }

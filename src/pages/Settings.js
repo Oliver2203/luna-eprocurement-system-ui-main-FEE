@@ -1,23 +1,41 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
+import useUserInfo from '~/utils/useUserInfo';
 
 function Settings() {
   const [copy, setCopy] = useState(false);
+
+  const { userInfo } = useUserInfo();
 
   useEffect(() => {
     document.title = 'Settings';
   });
 
-  const entityCode = 'XYZ3D1';
-
   const handleCopy = async () => {
     setCopy(true);
-    await navigator.clipboard.writeText(entityCode);
+    await navigator.clipboard.writeText(userInfo.legalEntityCode);
 
     setTimeout(() => {
       setCopy(false);
     }, 2000);
   };
+
+  const routes = [
+    {
+      path: 'user-list',
+      content: 'User list',
+    },
+    {
+      path: 'teams',
+      content: 'Deparment/Teams',
+    },
+    {
+      path: 'config-roles',
+      content: 'Configure Roles',
+    },
+  ];
+
+  if (userInfo?.role !== 'MANAGER') return <h1>Member cannot see Settings Page</h1>;
 
   return (
     <div className="px-10 pt-7">
@@ -31,7 +49,7 @@ function Settings() {
         <div className="flex items-center bg-white rounded-[10px] border border-solid border-[#e4e4e4] gap-20 px-5">
           <div className="py-3">
             <h3 className="text-black leading-5 font-inter font-medium">Legal Entity Code</h3>
-            <p className="text-sm mt-1 leading-5 text-mainText">{entityCode}</p>
+            <p className="text-sm mt-1 leading-5 text-mainText">{userInfo?.legalEntityCode}</p>
           </div>
           <button
             className={
@@ -51,39 +69,22 @@ function Settings() {
         </div>
       </div>
       <div className="mt-4 h-15 flex gap-16">
-        <NavLink
-          to="/settings/user-list"
-          className={({ isActive }) =>
-            (isActive
-              ? 'text-primary before:absolute before:h-[2px] before:w-full before:-bottom-[2px] before:bg-primary '
-              : 'text-mainText hover:before:absolute hover:before:h-[2px] hover:before:w-full hover:before:-bottom-[2px] hover:before:bg-primary hover:text-primary ') +
-            'relative flex items-center justify-center w-37.5 max-w-full h-full leading-5 font-inter'
-          }
-        >
-          User list
-        </NavLink>
-        <NavLink
-          to="/settings/teams"
-          className={({ isActive }) =>
-            (isActive
-              ? 'text-primary before:absolute before:h-[2px] before:w-full before:-bottom-[2px] before:bg-primary '
-              : 'text-mainText hover:before:absolute hover:before:h-[2px] hover:before:w-full hover:before:-bottom-[2px] hover:before:bg-primary hover:text-primary ') +
-            'relative flex items-center justify-center w-37.5 max-w-full h-full leading-5 font-inter'
-          }
-        >
-          Deparment/Teams
-        </NavLink>
-        <NavLink
-          to="/settings/config-roles"
-          className={({ isActive }) =>
-            (isActive
-              ? 'text-primary before:absolute before:h-[2px] before:w-full before:-bottom-[2px] before:bg-primary '
-              : 'text-mainText hover:before:absolute hover:before:h-[2px] hover:before:w-full hover:before:-bottom-[2px] hover:before:bg-primary hover:text-primary ') +
-            'relative flex items-center justify-center w-37.5 max-w-full h-full leading-5 font-inter'
-          }
-        >
-          Configure Roles
-        </NavLink>
+        {routes.map((route, idx) => {
+          return (
+            <NavLink
+              key={idx}
+              to={`/settings/${route.path}`}
+              className={({ isActive }) =>
+                (isActive
+                  ? 'text-primary before:absolute before:h-[2px] before:w-full before:-bottom-[2px] before:bg-primary '
+                  : 'text-mainText hover:before:absolute hover:before:h-[2px] hover:before:w-full hover:before:-bottom-[2px] hover:before:bg-primary hover:text-primary ') +
+                'relative flex items-center justify-center w-37.5 max-w-full h-full leading-5 font-inter'
+              }
+            >
+              {route.content}
+            </NavLink>
+          );
+        })}
       </div>
       <div className="line"></div>
       <Outlet />

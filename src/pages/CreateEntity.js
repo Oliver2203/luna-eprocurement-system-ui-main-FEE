@@ -5,16 +5,16 @@ import PrimaryButton from '~/components/PrimaryButton';
 import handleCreateEntity from '~/utils/handleCreateEntity';
 import { useNavigate } from 'react-router-dom';
 import useToken from '~/utils/useToken';
-import useData from '~/utils/useData';
+import useUserInfo from '~/utils/useUserInfo';
 
-function CreateEntity({ setToken, entity }) {
+function CreateEntity() {
   // Set page title
   useEffect(() => {
     document.title = 'Create Entity';
   }, []);
 
   const { token } = useToken();
-  const{fetchUserInfo} = useData();
+  const { fetchUserInfo } = useUserInfo();
 
   const navigate = useNavigate();
 
@@ -44,9 +44,9 @@ function CreateEntity({ setToken, entity }) {
 
     if (entityCodeError === undefined && bussinessNumError === undefined) {
       const res = await handleCreateEntity(bussinessNum, entityCode, setError, token);
-      console.log(res)
+
       if (res) {
-        fetchUserInfo(token)
+        await fetchUserInfo(token);
         navigate('/');
       }
     }

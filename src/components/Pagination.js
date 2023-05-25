@@ -5,7 +5,7 @@ function Pagination({ totalItems, itemsPerPage, setCurrentPage, currentPage }) {
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  if (totalPages === 1) {
+  if (totalPages <= 1) {
     return null;
   }
 

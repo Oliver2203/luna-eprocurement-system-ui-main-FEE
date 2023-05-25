@@ -1,4 +1,5 @@
 import axios from '~/api/axios';
+
 const CREATE_ENTITY_URL = '/api/entity/create-entity';
 
 const handleCreateEntity = async (name, code, setError, token) => {

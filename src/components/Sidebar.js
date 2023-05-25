@@ -1,9 +1,11 @@
 import { NavLink, useNavigate, Link } from 'react-router-dom';
 import useToken from '~/utils/useToken';
-import useData from '~/utils/useData';
+import useUserInfo from '~/utils/useUserInfo';
+
 function Sidebar() {
   const { deleteToken } = useToken();
-  const { deleteData} = useData();
+  const { deleteUserInfo } = useUserInfo();
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -11,7 +13,7 @@ function Sidebar() {
 
     if (accepted) {
       deleteToken();
-      deleteData();
+      deleteUserInfo();
       navigate('/sign-in');
     }
   };
