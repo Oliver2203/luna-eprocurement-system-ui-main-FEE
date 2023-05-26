@@ -91,12 +91,12 @@ const USER_LIST = [
 
 const DEPARTMENT_LIST = [
   'RMIT Business Center',
-  'RMIT Business Build 2',
-  'RMIT Business Build 1',
-  'RMIT Business Build 8',
+  'RMIT Business Department 2',
+  'RMIT Business Department 1',
+  'RMIT Business Department 8',
 ];
 
-const TEAM_LIST = ['Team A', 'Team B'];
+const TEAM_LIST = ['Team A', 'Team B',  'Team C', 'Team D'];
 
 const ROLE_LIST = ['Administrator', 'Manager', 'Member', 'Viewer', 'Supervisor'];
 
