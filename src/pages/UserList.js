@@ -28,19 +28,20 @@ function UserList() {
       setUserList(users);
     };
     fetchData();
-  }, [token, userInfo]);
+    // eslint-disable-next-line
+  }, []);
 
-  const handleOpen = (id) => {
+  const handleOpen = (email) => {
     setModalState(true);
-    setCurrentModal(id);
+    setCurrentModal(email);
   };
 
   const handleClose = () => {
     setModalState(false);
   };
 
-  const handleDelete = (id) => {
-    setUserList((prevState) => prevState.filter((user) => user.id !== id));
+  const handleDelete = (email) => {
+    setUserList((prevState) => prevState.filter((user) => user.email !== email));
   };
 
   const usersPerPage = 6;
@@ -63,9 +64,9 @@ function UserList() {
       </div>
       <div className="line"></div>
       <div className="grid user-list-columns px-11 bg-white">
-        {currentUsersList.map((user, idx) => {
+        {currentUsersList.map((user) => {
           return (
-            <div key={idx} className="contents">
+            <div key={user.email} className="contents">
               <div className="flex gap-[18px] h-20 items-center">
                 <img src="/images/user-portrait.png" alt="" className="w-[46px]" />
                 <div className="text-sm leading-5 font-inter">
@@ -84,20 +85,20 @@ function UserList() {
                 <ActionButton
                   type="edit"
                   onClick={() => {
-                    handleOpen(user.id);
+                    handleOpen(user.email);
                   }}
                 />
                 <ActionButton
                   type="delete"
                   onClick={() => {
-                    handleDelete(user.id);
+                    handleDelete(user.email);
                   }}
                 />
               </div>
-              {(modalState || hasTransitionedIn) && currentModal === user.id && (
+              {(modalState || hasTransitionedIn) && currentModal === user.email && (
                 <Modal
                   handleClose={handleClose}
-                  active={modalState && currentModal === user.id}
+                  active={modalState && currentModal === user.email}
                   hasTransitionedIn={hasTransitionedIn}
                 >
                   <ModalUserInfo user={user} handleClose={handleClose} userList={userList} setUserList={setUserList} />
@@ -113,8 +114,12 @@ function UserList() {
         setCurrentPage={setCurrentPage}
         currentPage={currentPage}
       />
-      {currentUsersList.length === 0 && <h1 className="font-inter font-medium text-center py-4 bg-white"> This entity currently has no member available</h1> }
-      {usersPerPage < currentUsersList.length && <div className="pt-5 bg-white"></div> }
+      {currentUsersList.length === 0 && (
+        <h1 className="font-inter font-medium text-center py-4 bg-white">
+          This entity currently has no member available
+        </h1>
+      )}
+      {usersPerPage < currentUsersList.length && <div className="pt-5 bg-white"></div>}
     </div>
   );
 }

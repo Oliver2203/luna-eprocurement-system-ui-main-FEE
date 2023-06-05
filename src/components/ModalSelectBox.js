@@ -10,11 +10,6 @@ function ModalSelectBox({ options, setSelected, selected, edit, toggleEdit, alt 
   useEffect(() => {
     setNewOptions(options.filter((option) => option !== selected).sort());
     // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    setNewOptions(options.filter((option) => option !== selected).sort());
-    // eslint-disable-next-line
   }, [selected]);
 
   useEffect(() => {
@@ -31,16 +26,15 @@ function ModalSelectBox({ options, setSelected, selected, edit, toggleEdit, alt 
         });
         toggleEdit();
       }}
-      className={
-        (active && edit ? 'border-primary' : 'border-gray-100') +
-        ' w-[500px] flex items-center py-3 px-5 relative border border-solid rounded-[5px]'
-      }
+      className={`w-[500px] flex items-center py-3 px-5 relative border border-solid rounded-[5px] ${
+        active && edit ? 'border-primary' : 'border-gray-100'
+      }`}
     >
       <div className="flex justify-between w-full">
-        <p className={(active && edit ? 'text-primary' : ' text-black') + ' font-inter font-medium leading-6 pointer'}>
+        <p className={`font-inter font-medium leading-6 pointer ${active && edit ? 'text-primary' : ' text-black'}`}>
           {selected ? selected : `-- ${alt} --`}
         </p>
-        <img src={active ? '/images/icons/arrow-active.svg' : '/images/icons/arrow-inactive.svg'} alt="" />
+        <img src={`/images/icons/arrow-${!active && 'in'}active.svg`} alt="" />
       </div>
       {(active || hasTransitionedIn) && (
         <div className={`select-box ${hasTransitionedIn && 'in'} ${active && 'visible'}`}>

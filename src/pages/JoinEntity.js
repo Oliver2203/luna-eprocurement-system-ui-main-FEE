@@ -31,7 +31,7 @@ function JoinEntity() {
     setError(entityCodeError);
 
     if (entityCodeError === undefined) {
-      const res = await handleJoinEntity(entityCode, token);
+      const res = await handleJoinEntity(entityCode, token, setError);
 
       if (res) {
         await fetchUserInfo(token);

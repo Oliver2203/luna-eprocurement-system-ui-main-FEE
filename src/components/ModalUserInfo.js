@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import ModalSelectBox from './ModalSelectBox';
 import { DEPARTMENT_LIST, TEAM_LIST, ROLE_LIST } from './Data';
+import useToken from '~/utils/useToken';
+import handleMember from '~/utils/handleMember';
 
 function ModalUserInfo({ user, userList, setUserList, handleClose, edit, toggleEdit }) {
+  const { token } = useToken();
+
   const [department, setDepartment] = useState(user.department);
   const [team, setTeam] = useState(user.team);
   const [role, setRole] = useState(user.role);
@@ -29,7 +33,25 @@ function ModalUserInfo({ user, userList, setUserList, handleClose, edit, toggleE
   ];
 
   // Handle manager submit edit user
-  const handleChange = (id) => {
+  const handleChange = async (email) => {
+    if (user.department !== department) {
+      const res = await handleMember('department', department, email, token);
+
+      // If there's an error, return undefined
+      if (!res) {
+        return undefined;
+      }
+    }
+
+    if (user.team !== team) {
+      const res = await handleMember('team', team, email, token);
+
+      // If there's an error, return undefined
+      if (!res) {
+        return undefined;
+      }
+    }
+
     const changedUser = {
       ...user,
       department,
@@ -37,7 +59,7 @@ function ModalUserInfo({ user, userList, setUserList, handleClose, edit, toggleE
       role,
     };
 
-    const userIdx = userList.findIndex((user) => user.id === id);
+    const userIdx = userList.findIndex((user) => user.email === email);
 
     setUserList((prevState) => {
       prevState[userIdx] = changedUser;
@@ -80,7 +102,7 @@ function ModalUserInfo({ user, userList, setUserList, handleClose, edit, toggleE
         </button>
         <button
           className="flex-1 py-3 font-inter leading-6 font-medium bg-primary text-white rounded-lg"
-          onClick={() => handleChange(user.id)}
+          onClick={() => handleChange(user.email)}
         >
           Accept
         </button>
