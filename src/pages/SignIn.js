@@ -2,8 +2,10 @@ import Input from '~/components/Input';
 import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import handleInput from '~/utils/validator';
-import handleLogin from '~/utils/handleLogin';
+// import handleLogin from '~/utils/handleLogin';
 import PrimaryButton from '~/components/PrimaryButton';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '~/features/actions/authAction';
 
 function SignIn({ setToken }) {
   // Set document title
@@ -13,6 +15,9 @@ function SignIn({ setToken }) {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const { accessToken, loading } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const [error, setError] = useState({
     email: '',
@@ -26,6 +31,14 @@ function SignIn({ setToken }) {
     });
   }, [email, password]);
 
+  useEffect(() => {
+    if (accessToken && !loading) {
+      setToken(accessToken);
+      navigate('/');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accessToken, setToken, navigate, loading]);
+
   const handleSubmit = async () => {
     // Pretreatment: check email username and password is valid
     const emailError = handleInput(email, 'required', 'email');
@@ -36,14 +49,8 @@ function SignIn({ setToken }) {
     // Log in case: only check email and password pass the pretreatment
     if (emailError === undefined && passwordError === undefined) {
       // Go to handle login to check on call api
-      const token = await handleLogin(email, password, setError);
 
-      if (token) {
-        setToken(token);
-
-        // Navigate to main page
-        navigate('/');
-      }
+      dispatch(loginUser({ email, password, setError }));
     }
   };
 

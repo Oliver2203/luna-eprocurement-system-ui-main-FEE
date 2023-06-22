@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import handleInput from '~/utils/validator';
 import Input from '~/components/Input';
 import PrimaryButton from '~/components/PrimaryButton';
-import handleCreateEntity from '~/utils/handleCreateEntity';
 import { useNavigate } from 'react-router-dom';
 import useToken from '~/utils/useToken';
-import useUserInfo from '~/utils/useUserInfo';
+import { useDispatch, useSelector } from 'react-redux';
+import { createEntity } from '~/features/actions/userInfoAction';
 
 function CreateEntity() {
   // Set page title
@@ -14,9 +14,10 @@ function CreateEntity() {
   }, []);
 
   const { token } = useToken();
-  const { fetchUserInfo } = useUserInfo();
 
   const navigate = useNavigate();
+  const { userInfo, loading } = useSelector((state) => state.userInfo);
+  const dispatch = useDispatch();
 
   const [entityCode, setEntityCode] = useState('');
   const [bussinessNum, setBussinessNum] = useState('');
@@ -25,6 +26,12 @@ function CreateEntity() {
     entity: '',
     bussinessNum: '',
   });
+
+  useEffect(() => {
+    if (userInfo?.legalEntityCode && !loading) {
+      navigate('/');
+    }
+  }, [userInfo, loading, navigate]);
 
   useEffect(() => {
     setError({
@@ -43,12 +50,7 @@ function CreateEntity() {
     });
 
     if (entityCodeError === undefined && bussinessNumError === undefined) {
-      const res = await handleCreateEntity(bussinessNum, entityCode, setError, token);
-
-      if (res) {
-        await fetchUserInfo(token);
-        navigate('/');
-      }
+      dispatch(createEntity({ token, code: entityCode, name: bussinessNum }));
     }
   };
 

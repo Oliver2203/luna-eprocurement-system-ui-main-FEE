@@ -1,15 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { NavLink, Outlet } from 'react-router-dom';
-import useUserInfo from '~/utils/useUserInfo';
 
 function Settings() {
   const [copy, setCopy] = useState(false);
 
-  const { userInfo } = useUserInfo();
-
-  useEffect(() => {
-    document.title = 'Settings';
-  });
+  const { userInfo } = useSelector((state) => state.userInfo);
 
   const handleCopy = async () => {
     setCopy(true);

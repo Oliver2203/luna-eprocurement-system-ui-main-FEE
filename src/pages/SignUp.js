@@ -2,9 +2,9 @@ import Input from '~/components/Input';
 import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import handleInput from '~/utils/validator';
-import handleSignUp from '~/utils/handleSignUp';
 import PrimaryButton from '~/components/PrimaryButton';
-import handleLogin from '~/utils/handleLogin';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser, registerUser } from '~/features/actions/authAction';
 
 function SignUp({ setToken }) {
   // Set document title
@@ -15,6 +15,9 @@ function SignUp({ setToken }) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+
+  const { accessToken, success } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const [error, setError] = useState({
     email: '',
@@ -30,6 +33,20 @@ function SignUp({ setToken }) {
     });
   }, [email, name, password]);
 
+  useEffect(() => {
+    if (success) {
+      dispatch(loginUser({ email, password }));
+    }
+    // eslint-disable-next-line
+  }, [success, dispatch]);
+
+  useEffect(() => {
+    if (accessToken) {
+      setToken(accessToken);
+      navigate('/create-entity');
+    }
+  });
+
   const handleSubmit = async () => {
     // Pretreatment: check email username and password is valid
     const emailError = handleInput(email, 'required', 'email');
@@ -41,17 +58,8 @@ function SignUp({ setToken }) {
     // Log in case: only check email and password pass the pretreatment
     if (emailError === undefined && nameError === undefined && passwordError === undefined) {
       // Go to handle sign up to check on call api
-      const res = await handleSignUp(email, name, password, setError);
-
-      if (res) {
-        const token = await handleLogin(email, password);
-
-        if (token) {
-          setToken(token);
-
-          navigate('/create-entity');
-        }
-      }
+      dispatch(registerUser({ email, username: name, password, setError }));
+      console.log(success);
     }
   };
 

@@ -1,70 +1,116 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ModalSelectBox from './ModalSelectBox';
-import { DEPARTMENT_LIST, TEAM_LIST, ROLE_LIST } from './Data';
 import useToken from '~/utils/useToken';
-import handleMember from '~/utils/handleMember';
+import { ROLE_LIST } from './Data';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchEntityInfo } from '~/features/actions/entityAction';
+import { setUserDepartment } from '~/api/departmentServices';
+import { changeMemberDepartment, changeMemberRole, changeMemberTeam } from '~/features/data/memberListSlice';
+import { setUserTeam } from '~/api/teamService';
+import { setUserRole } from '~/api/userService';
 
-function ModalUserInfo({ user, userList, setUserList, handleClose, edit, toggleEdit }) {
+function ModalUserInfo({ user, handleClose, edit, toggleEdit }) {
   const { token } = useToken();
 
-  const [department, setDepartment] = useState(user.department);
-  const [team, setTeam] = useState(user.team);
-  const [role, setRole] = useState(user.role);
+  const [department, setDepartment] = useState();
+
+  const [team, setTeam] = useState(
+    !user.teamCode
+      ? undefined
+      : {
+          teamCode: user.teamCode,
+          teamName: user.teamName,
+        },
+  );
+  const [role, setRole] = useState({ roleName: user.role });
+
+  const dispatch = useDispatch();
+
+  const { entity, loading, success, error } = useSelector((state) => state.entity);
+  useEffect(() => {
+    if (!entity && !loading && !success) {
+      const legalEntityCode = user.legalEntityCode;
+      dispatch(fetchEntityInfo({ token, legalEntityCode }));
+    }
+
+    if (!loading && error) {
+      console.log(error);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
+
+  useEffect(() => {
+    setDepartment(entity?.departments?.find((item) => item.departmentCode === user.departmentCode));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entity]);
+
+  useEffect(() => {
+    if (department && team && !department.teams.find((item) => item.teamCode === team.teamCode)) {
+      setTeam(undefined);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [department]);
 
   const selectBoxes = [
     {
+      type: 'department',
       selected: department,
       setSelected: setDepartment,
-      options: DEPARTMENT_LIST,
+      options: entity ? entity?.departments : undefined,
       alt: 'Choose Department',
     },
     {
-      selected: team,
+      type: 'team',
+      selected: !department ? false : team,
       setSelected: setTeam,
-      options: TEAM_LIST,
+      options: department?.teams,
       alt: 'Choose Team',
     },
     {
+      type: 'role',
       selected: role,
       setSelected: setRole,
-      options: ROLE_LIST,
+      options: ROLE_LIST.filter((item) => item.roleName !== role.roleName),
       alt: 'Choose Role',
     },
   ];
 
   // Handle manager submit edit user
-  const handleChange = async (email) => {
-    if (user.department !== department) {
-      const res = await handleMember('department', department, email, token);
+  const handleChange = async () => {
+    if (department.departmentCode && user.departmentCode !== department.departmentCode) {
+      const res = await setUserDepartment(token, department.departmentCode, user.email);
+
+      if (!res) {
+        return undefined;
+      }
+      dispatch(
+        changeMemberDepartment({
+          email: user.email,
+          departmentName: department.departmentName,
+          departmentCode: department.departmentCode,
+        }),
+      );
+    }
+
+    if (team.teamCode && user.teamCode !== team.teamCode) {
+      const res = await setUserTeam(token, team.teamCode, user.email);
 
       // If there's an error, return undefined
       if (!res) {
         return undefined;
       }
+
+      dispatch(changeMemberTeam({ email: user.email, teamCode: team.teamCode, teamName: team.teamName }));
     }
 
-    if (user.team !== team) {
-      const res = await handleMember('team', team, email, token);
+    if (role.roleName && user.role !== role.roleName) {
+      const res = await setUserRole(token, user.email, role.roleName);
 
-      // If there's an error, return undefined
       if (!res) {
         return undefined;
       }
+      dispatch(changeMemberRole({ email: user.email, role: role.roleName }));
     }
-
-    const changedUser = {
-      ...user,
-      department,
-      team,
-      role,
-    };
-
-    const userIdx = userList.findIndex((user) => user.email === email);
-
-    setUserList((prevState) => {
-      prevState[userIdx] = changedUser;
-      return prevState;
-    });
 
     handleClose();
   };
@@ -84,12 +130,13 @@ function ModalUserInfo({ user, userList, setUserList, handleClose, edit, toggleE
         {selectBoxes.map((selectBox, idx) => (
           <ModalSelectBox
             key={idx}
+            type={selectBox.type}
+            options={selectBox.options}
             selected={selectBox.selected}
             setSelected={selectBox.setSelected}
-            options={selectBox.options}
-            alt={selectBox.alt}
             edit={edit}
             toggleEdit={toggleEdit}
+            alt={selectBox.alt}
           />
         ))}
       </div>

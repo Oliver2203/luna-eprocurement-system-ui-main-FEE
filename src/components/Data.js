@@ -98,7 +98,13 @@ const DEPARTMENT_LIST = [
 
 const TEAM_LIST = ['Team A', 'Team B'];
 
-const ROLE_LIST = ['Administrator', 'Manager', 'Member', 'Viewer', 'Supervisor'];
+const ROLE_LIST = [
+  { roleCode: 1, roleName: 'ADMINISTRATOR' },
+  { roleCode: 2, roleName: 'MANAGER' },
+  { roleCode: 3, roleName: 'MEMBER' },
+  { roleCode: 4, roleName: 'VIEWER' },
+  { roleCode: 5, roleName: 'SUPERVISOR' },
+];
 
 // eslint-d
 export { USER_LIST, DEPARTMENT_LIST, TEAM_LIST, ROLE_LIST };

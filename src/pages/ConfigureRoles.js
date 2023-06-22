@@ -15,9 +15,9 @@ function ConfigureRoles() {
       </div>
       <div className="line"></div>
       <div className="grid grid-cols-3 px-11 bg-white pr-56">
-        {ROLE_LIST.map((department, idx) => (
-          <div key={idx} className="contents">
-            <div className="flex items-center text-mainText text-sm font-inter h-20">{department}</div>
+        {ROLE_LIST.map((role) => (
+          <div key={role.roleCode} className="contents">
+            <div className="flex items-center text-mainText text-sm font-inter h-20">{role.roleName}</div>
             <div className="flex gap-5 justify-center items-center text-white text-sm font-inter font-medium">
               <div className="bg-red text-white px-3 py-1 rounded-[30px] cursor-pointer">Reject</div>
               <div className="bg-green text-white px-3 py-[6px] rounded-[30px] cursor-pointer">Approve</div>

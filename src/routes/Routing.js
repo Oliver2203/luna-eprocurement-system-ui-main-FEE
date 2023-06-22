@@ -23,6 +23,7 @@ import Teams from '~/pages/Teams';
 import ConfigureRoles from '~/pages/ConfigureRoles';
 import Settings from '~/pages/Settings';
 import JoinEntity from '~/pages/JoinEntity';
+import ErrorPage from '~/pages/ErrorPage';
 
 function Routing() {
   const { setToken } = useToken();
@@ -115,6 +116,10 @@ function Routing() {
           element: <ConfigureRoles />,
         },
       ],
+    },
+    {
+      path: '/error',
+      element: <ErrorPage />,
     },
   ]);
   return <>{routes}</>;

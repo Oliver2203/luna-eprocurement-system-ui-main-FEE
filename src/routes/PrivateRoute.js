@@ -1,24 +1,40 @@
-import { Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import useToken from '~/utils/useToken';
-import useUserInfo from '~/utils/useUserInfo';
+import { useEffect } from 'react';
+import fetchUserInfo from '~/api/fetchUserInfo';
+import { setUserInfo } from '~/features/data/userInfoSlice';
 
 function PrivateRoute({ children }) {
   const { token } = useToken();
-  const { userInfo, fetchUserInfo } = useUserInfo();
+  const { userInfo } = useSelector((state) => state.userInfo);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  if (!token) {
-    return <Navigate to="/sign-in" />;
-  }
+  useEffect(() => {
+    if (!token) {
+      navigate('/sign-in');
+    } else if (!userInfo) {
+      fetchUserInfo(token)
+        .then((res) => {
+          if (!res) {
+            navigate('/error');
+          }
+          dispatch(setUserInfo(res));
+          if (res?.legalEntityCode === null) {
+            navigate('/create-entity');
+          }
+        })
+        .catch((err) => {
+          console.log('err');
+        });
+    } else if (userInfo?.legalEntityCode === null) {
+      navigate('/create-entity');
+    }
+    // eslint-disable-next-line
+  }, []);
 
-  if (!userInfo) {
-    fetchUserInfo(token);
-  }
-
-  if (userInfo?.legalEntityCode === null) {
-    return <Navigate to="/create-entity" />;
-  } else {
-    return userInfo && children;
-  }
+  return children;
 }
 
 export default PrivateRoute;

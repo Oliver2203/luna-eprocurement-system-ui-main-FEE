@@ -1,7 +1,7 @@
-import useUserInfo from '~/utils/useUserInfo';
+import { useSelector } from 'react-redux';
 
 function Topbar() {
-  const { userInfo } = useUserInfo();
+  const { userInfo } = useSelector((state) => state.userInfo);
 
   return (
     <>

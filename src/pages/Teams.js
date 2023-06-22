@@ -1,13 +1,76 @@
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import ActionButton from '~/components/ActionButton';
-import { DEPARTMENT_LIST, TEAM_LIST } from '~/components/Data';
+import useMountTransition from '~/utils/useMountTransition';
+import Modal from '~/components/Modal';
 
-function Teams() {
-  const department_list = DEPARTMENT_LIST;
+import useToken from '~/utils/useToken';
+import ModalAddDepartment from '~/components/ModalAddDepartment';
+import { fetchEntityInfo } from '~/features/actions/entityAction';
+import ModalAddTeam from '~/components/ModalAddTeam';
+
+const Teams = React.memo(() => {
+  const { token } = useToken();
+
+  const { entity, error } = useSelector((state) => state.entity);
+
+  const dispatch = useDispatch();
+
+  const [modalState, setModalState] = useState(false);
+  const [currentModal, setCurrentModal] = useState();
+
+  const { userInfo } = useSelector((state) => state.userInfo);
+
+  const hasTransitionedIn = useMountTransition(modalState, 200);
+
+  useEffect(() => {
+    document.title = 'Departments/Teams';
+  }, []);
+
+  useEffect(() => {
+    const legalEntityCode = userInfo.legalEntityCode;
+
+    if (!entity && !error) {
+      dispatch(fetchEntityInfo({ token, legalEntityCode }));
+
+      if (error) {
+        console.log(error);
+      }
+    }
+    // eslint-disable-next-line
+  }, [error]);
+
+  const handleOpenDepartmentModal = () => {
+    setCurrentModal('Department');
+    setModalState(true);
+  };
+
+  const handleOpenTeamModal = (departmentCode) => {
+    setCurrentModal(departmentCode);
+    setModalState(true);
+  };
+
+  const handleClose = () => {
+    setModalState(false);
+  };
 
   return (
     <div className="mt-9 rounded-xl overflow-hidden sidebar-shadow">
       <div className="grid grid-cols-3 px-11 pr-56">
-        <h3 className="font-inter font-medium text-[15px] leading-[26px] text-black py-4">DEPARTMENT</h3>
+        <div className="flex gap-4">
+          <h3 className="font-inter font-medium text-[15px] leading-[26px] text-black py-4">DEPARTMENT</h3>
+          <img
+            src="/images/icons/plus-circle.svg"
+            alt=""
+            className="cursor-pointer"
+            onClick={handleOpenDepartmentModal}
+          />
+          {(modalState || hasTransitionedIn) && currentModal === 'Department' && (
+            <Modal handleClose={handleClose} active={modalState} hasTransitionedIn={hasTransitionedIn}>
+              <ModalAddDepartment handleClose={handleClose} />
+            </Modal>
+          )}
+        </div>
         <h3 className="font-inter font-medium text-[15px] leading-[26px] text-black py-4 flex justify-center">TEAMS</h3>
         <h3 className="font-inter font-medium text-[15px] leading-[26px] text-black py-4 flex justify-center">
           ACTION
@@ -15,26 +78,38 @@ function Teams() {
       </div>
       <div className="line"></div>
       <div className="grid grid-cols-3 px-11 bg-white pr-56">
-        {department_list.map((department, idx) => (
-          <div key={idx} className="contents">
-            <div className="flex items-center text-mainText text-sm font-inter h-20">{department}</div>
-            <div className="flex flex-col gap-3 justify-center items-center text-mainText text-sm font-inter">
-              {TEAM_LIST.map((team, idx) => (
-                <div key={idx} className="">
-                  {team}
-                </div>
-              ))}
+        {!entity && <div>An error has occured</div>}
+        {entity &&
+          entity.departments?.map((department) => (
+            <div key={department.departmentCode} className="contents">
+              <div className="flex items-center text-mainText text-sm font-inter h-20">{department.departmentName}</div>
+              <div className="flex flex-col gap-3 justify-center items-center text-mainText text-sm font-inter">
+                {department.teams?.map((team) => (
+                  <div key={team.teamCode} className="">
+                    {team.teamName}
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center justify-center gap-5">
+                <ActionButton
+                  type="add team"
+                  onClick={() => {
+                    handleOpenTeamModal(department.departmentCode);
+                  }}
+                />
+                <ActionButton type="delete" onClick={() => {}} />
+              </div>
+              {(modalState || hasTransitionedIn) && currentModal === department.departmentCode && (
+                <Modal handleClose={handleClose} active={modalState} hasTransitionedIn={hasTransitionedIn}>
+                  <ModalAddTeam handleClose={handleClose} departmentCode={department.departmentCode} />
+                </Modal>
+              )}
             </div>
-            <div className="flex items-center justify-center gap-5">
-              <ActionButton type="add team" onClick={() => {}} />
-              <ActionButton type="delete" onClick={() => {}} />
-            </div>
-          </div>
-        ))}
+          ))}
       </div>
-      <div className="pt-5 bg-white" />
+      {/* <div className="pt-5 bg-white" /> */}
     </div>
   );
-}
+});
 
 export default Teams;

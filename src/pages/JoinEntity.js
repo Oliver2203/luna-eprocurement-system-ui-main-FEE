@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Input from '~/components/Input';
 import PrimaryButton from '~/components/PrimaryButton';
-import handleJoinEntity from '~/utils/handleJoinEntity';
 import useToken from '~/utils/useToken';
 import handleInput from '~/utils/validator';
-import useUserInfo from '~/utils/useUserInfo';
+import { useDispatch, useSelector } from 'react-redux';
+import { joinEntity } from '~/features/actions/userInfoAction';
 
 function JoinEntity() {
   // Set document title
@@ -14,12 +14,19 @@ function JoinEntity() {
   }, []);
 
   const { token } = useToken();
-  const { fetchUserInfo } = useUserInfo();
 
   const navigate = useNavigate();
+  const { userInfo, loading } = useSelector((state) => state.userInfo);
+  const dispatch = useDispatch();
 
   const [entityCode, setEntityCode] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (userInfo?.legalEntityCode && !loading) {
+      navigate('/');
+    }
+  }, [userInfo, loading, navigate]);
 
   useEffect(() => {
     setError('');
@@ -31,12 +38,7 @@ function JoinEntity() {
     setError(entityCodeError);
 
     if (entityCodeError === undefined) {
-      const res = await handleJoinEntity(entityCode, token, setError);
-
-      if (res) {
-        await fetchUserInfo(token);
-        navigate('/');
-      }
+      dispatch(joinEntity({ token, legalEntityCode: entityCode, setError }));
     }
   };
 

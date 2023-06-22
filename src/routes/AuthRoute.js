@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom';
 import useToken from '~/utils/useToken';
 
 function AuthRoute({ children }) {
-  const token = useToken().token;
+  const { token } = useToken();
 
   if (!token) {
     return <>{children}</>;
