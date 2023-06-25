@@ -38,7 +38,7 @@ const ModalSelectBox = React.memo(({ options, selected, setSelected, edit, toggl
       </div>
       {selected !== false && (active || hasTransitionedIn) && (
         <div className={`select-box ${hasTransitionedIn && 'in'} ${active && 'visible'}`}>
-          {newOptions?.map((option) => {
+          {newOptions.map((option) => {
             return (
               <div
                 key={option?.[`${type}Code`]}

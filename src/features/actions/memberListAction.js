@@ -12,7 +12,6 @@ export const fetchMemberList = createAsyncThunk(
         withCredentials: true,
       });
       return res.data.data;
-      
     } catch (err) {
       if (err.response) {
         return rejectWithValue(err.response.data);

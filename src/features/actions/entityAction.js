@@ -11,7 +11,6 @@ export const fetchEntityInfo = createAsyncThunk(
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
-      console.log(res.data.data)
       return res.data.data[0];
     } catch (error) {
       if (error.response) {
