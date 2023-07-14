@@ -25,6 +25,10 @@ const entitySlice = createSlice({
         });
       }
     },
+    removeDepartment: (state, action) => {
+      const { departmentCode } = action.payload;
+      state.entity.departments = state.entity.departments.filter((item) => item.departmentCode !== departmentCode);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -48,5 +52,5 @@ const entitySlice = createSlice({
   },
 });
 
-export const { addDepartment, addTeam } = entitySlice.actions;
+export const { addDepartment, addTeam, removeDepartment } = entitySlice.actions;
 export default entitySlice.reducer;

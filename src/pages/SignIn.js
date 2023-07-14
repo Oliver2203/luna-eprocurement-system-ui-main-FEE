@@ -9,7 +9,9 @@ import { loginUser } from '~/features/actions/authAction';
 
 function SignIn({ setToken }) {
   // Set document title
-  document.title = 'Sign In';
+  useEffect(() => {
+    document.title = 'Sign In';
+  }, []);
 
   const navigate = useNavigate();
 

@@ -92,7 +92,7 @@ function ModalUserInfo({ user, handleClose, edit, toggleEdit }) {
       );
     }
 
-    if (team.teamCode && user.teamCode !== team.teamCode) {
+    if (team?.teamCode && user.teamCode !== team?.teamCode) {
       const res = await setUserTeam(token, team.teamCode, user.email);
 
       // If there's an error, return undefined

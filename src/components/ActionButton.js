@@ -4,12 +4,10 @@ function ActionButton({ type, onClick }) {
   const [color, setColor] = useState();
 
   useEffect(() => {
-    if (type === 'edit' || type === 'add team') {
+    if (type === 'edit' || type === 'add team' || type === 'done') {
       setColor('primary');
-    } else if (type === 'delete') {
+    } else if (type === 'delete' || type === 'cancel') {
       setColor('red');
-    } else if (type === 'add team') {
-      setColor('primary');
     }
     // eslint-disable-next-line
   }, []);

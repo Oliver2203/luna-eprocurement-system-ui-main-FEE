@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink, Outlet } from 'react-router-dom';
 
@@ -83,7 +83,9 @@ function Settings() {
         })}
       </div>
       <div className="line"></div>
-      <Outlet />
+      <Suspense>
+        <Outlet />
+      </Suspense>
     </div>
   );
 }

@@ -22,6 +22,8 @@ export const memberList = createSlice({
             ...member,
             departmentCode,
             departmentName,
+            teamName: null,
+            teamCode: null,
           };
         }
         return member;
@@ -58,6 +60,22 @@ export const memberList = createSlice({
       const email = action.payload;
       state.memberList = state.memberList.filter((user) => user.email !== email);
     },
+    removeUsersFromDepartment: (state, action) => {
+      const { departmentCode } = action.payload;
+
+      state.memberList = state.memberList.map((member) => {
+        if (member.departmentCode === departmentCode) {
+          return {
+            ...member,
+            departmentCode: null,
+            departmentName: null,
+            teamCode: null,
+            teamName: null,
+          };
+        }
+        return member;
+      });
+    },
     resetMemberList: () => initialState,
   },
   extraReducers: (builder) => {
@@ -80,6 +98,12 @@ export const memberList = createSlice({
   },
 });
 
-export const { setMemberList, deleteMember, changeMemberTeam, changeMemberDepartment, changeMemberRole } =
-  memberList.actions;
+export const {
+  setMemberList,
+  deleteMember,
+  changeMemberTeam,
+  changeMemberDepartment,
+  changeMemberRole,
+  removeUsersFromDepartment,
+} = memberList.actions;
 export default memberList.reducer;

@@ -1,29 +1,34 @@
 // Import depedencies
 import { Navigate, useRoutes } from 'react-router-dom';
+import { lazy } from 'react';
 import useToken from '~/utils/useToken';
-
-// Import Layout
-import DefaultLayout from '~/components/Layout/DefaultLayout';
-import AuthLayout from '~/components/Layout/AuthLayout';
-import EntityLayout from '~/components/Layout/EntityLayout';
 
 // Import Route orders
 import AuthRoute from './AuthRoute';
 import PrivateRoute from './PrivateRoute';
 import EntityRoute from './EntityRoute';
 
+// Import Layout
+const DefaultLayout = lazy(() => import('~/components/Layout/DefaultLayout'));
+const AuthLayout = lazy(() => import('~/components/Layout/AuthLayout'));
+const EntityLayout = lazy(() => import('~/components/Layout/EntityLayout'));
+
 // Import Pages
-import SignIn from '~/pages/SignIn';
-import CreateEntity from '~/pages/CreateEntity';
-import Home from '~/pages/Home';
-import Dashboard from '~/pages/Dashboard';
-import SignUp from '~/pages/SignUp';
-import UserList from '~/pages/UserList';
-import Teams from '~/pages/Teams';
-import ConfigureRoles from '~/pages/ConfigureRoles';
-import Settings from '~/pages/Settings';
-import JoinEntity from '~/pages/JoinEntity';
-import ErrorPage from '~/pages/ErrorPage';
+const SignIn = lazy(() => import('~/pages/SignIn'));
+const SignUp = lazy(() => import('~/pages/SignUp'));
+const CreateEntity = lazy(() => import('~/pages/CreateEntity'));
+const JoinEntity = lazy(() => import('~/pages/JoinEntity'));
+const Home = lazy(() => import('~/pages/Home'));
+const Dashboard = lazy(() => import('~/pages/Dashboard'));
+const ProductsList = lazy(() => import('~/pages/ProductsList'));
+const ProductInfo = lazy(() => import('~/pages/ProductInfo'));
+const VendorList = lazy(() => import('~/pages/VendorList'));
+const VendorInfo = lazy(() => import('~/pages/VendorInfo'));
+const Settings = lazy(() => import('~/pages/Settings'));
+const UserList = lazy(() => import('~/pages/UserList'));
+const Teams = lazy(() => import('~/pages/Teams'));
+const ConfigureRoles = lazy(() => import('~/pages/ConfigureRoles'));
+const ErrorPage = lazy(() => import('~/pages/ErrorPage'));
 
 function Routing() {
   const { setToken } = useToken();
@@ -85,6 +90,46 @@ function Routing() {
         <PrivateRoute>
           <DefaultLayout>
             <Dashboard />
+          </DefaultLayout>
+        </PrivateRoute>
+      ),
+    },
+    {
+      path: '/products-list',
+      element: (
+        <PrivateRoute>
+          <DefaultLayout>
+            <ProductsList />
+          </DefaultLayout>
+        </PrivateRoute>
+      ),
+    },
+    {
+      path: '/products-list/:productCode',
+      element: (
+        <PrivateRoute>
+          <DefaultLayout>
+            <ProductInfo />
+          </DefaultLayout>
+        </PrivateRoute>
+      ),
+    },
+    {
+      path: '/vendor-list',
+      element: (
+        <PrivateRoute>
+          <DefaultLayout>
+            <VendorList />
+          </DefaultLayout>
+        </PrivateRoute>
+      ),
+    },
+    {
+      path: '/vendor-list/:vendorID',
+      element: (
+        <PrivateRoute>
+          <DefaultLayout>
+            <VendorInfo />
           </DefaultLayout>
         </PrivateRoute>
       ),

@@ -46,6 +46,30 @@ function Sidebar() {
           <img src="/images/icons/dashboard.svg" alt="" className="w-[18px]" />
           <p className="font-inter leading-6 text-mainText">Dashboard</p>
         </NavLink>
+        <NavLink
+          to="/products-list"
+          className={({ isActive }) =>
+            (isActive
+              ? 'bg-[#F4F7FF] before:absolute before:w-[3px] before:h-full before:right-0 before:bg-primary '
+              : 'hover:bg-[#F4F7FF] hover:before:absolute hover:before:w-[3px] hover:before:h-full hover:before:right-0 hover:before:bg-primary ') +
+            'relative flex h-[42px] gap-[10px] px-10 items-center'
+          }
+        >
+          <img src="/images/icons/box.svg" alt="" className="w-[18px]" />
+          <p className="font-inter leading-6 text-mainText">Products List</p>
+        </NavLink>
+        <NavLink
+          to="/vendor-list"
+          className={({ isActive }) =>
+            (isActive
+              ? 'bg-[#F4F7FF] before:absolute before:w-[3px] before:h-full before:right-0 before:bg-primary '
+              : 'hover:bg-[#F4F7FF] hover:before:absolute hover:before:w-[3px] hover:before:h-full hover:before:right-0 hover:before:bg-primary ') +
+            'relative flex h-[42px] gap-[10px] px-10 items-center'
+          }
+        >
+          <img src="/images/icons/dashboard.svg" alt="" className="w-[18px]" />
+          <p className="font-inter leading-6 text-mainText">Vendor List</p>
+        </NavLink>
         <div className="line mx-10 mt-2"></div>
         <Link
           to={'/settings/user-list'}

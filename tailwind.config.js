@@ -12,6 +12,7 @@ module.exports = {
       fontFamily: {
         montserrat: ['Montserrat'],
         inter: ['Inter'],
+        roboto: ['Roboto'],
       },
       colors: {
         primary: '#3056D3',
@@ -26,6 +27,7 @@ module.exports = {
         'gray-150': '#E3E3E3',
         'gray-200': '#F5F7FD',
         'gray-250': '#E9EDF9',
+        'gray-300': '#E7E7E7',
       },
     },
   },

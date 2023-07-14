@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import useToken from '~/utils/useToken';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import fetchUserInfo from '~/api/fetchUserInfo';
 import { setUserInfo } from '~/features/data/userInfoSlice';
 
@@ -34,7 +34,7 @@ function PrivateRoute({ children }) {
     // eslint-disable-next-line
   }, []);
 
-  return children;
+  return <Suspense>{children}</Suspense>;
 }
 
 export default PrivateRoute;

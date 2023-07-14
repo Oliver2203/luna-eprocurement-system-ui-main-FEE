@@ -8,6 +8,9 @@ import useToken from '~/utils/useToken';
 import ModalAddDepartment from '~/components/ModalAddDepartment';
 import { fetchEntityInfo } from '~/features/actions/entityAction';
 import ModalAddTeam from '~/components/ModalAddTeam';
+import { deleteDepartment } from '~/api/departmentServices';
+import { removeDepartment } from '~/features/data/entitySlice';
+import { removeUsersFromDepartment } from '~/features/data/memberListSlice';
 
 const Teams = React.memo(() => {
   const { token } = useToken();
@@ -48,6 +51,15 @@ const Teams = React.memo(() => {
   const handleOpenTeamModal = (departmentCode) => {
     setCurrentModal(departmentCode);
     setModalState(true);
+  };
+
+  const handleDeleteDepartment = async (departmentCode) => {
+    const res = await deleteDepartment(token, departmentCode);
+
+    if (res) {
+      dispatch(removeDepartment({ departmentCode }));
+      dispatch(removeUsersFromDepartment({ departmentCode }));
+    }
   };
 
   const handleClose = () => {
@@ -97,7 +109,12 @@ const Teams = React.memo(() => {
                     handleOpenTeamModal(department.departmentCode);
                   }}
                 />
-                <ActionButton type="delete" onClick={() => {}} />
+                <ActionButton
+                  type="delete"
+                  onClick={() => {
+                    handleDeleteDepartment(department.departmentCode);
+                  }}
+                />
               </div>
               {(modalState || hasTransitionedIn) && currentModal === department.departmentCode && (
                 <Modal handleClose={handleClose} active={modalState} hasTransitionedIn={hasTransitionedIn}>

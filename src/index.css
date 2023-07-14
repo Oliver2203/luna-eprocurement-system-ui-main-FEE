@@ -21,6 +21,10 @@
     grid-template-columns: 1.7fr 1.3fr 1fr 1fr;
   }
 
+  .products-list-columns {
+    grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+  }
+
   .modal {
     @apply fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-30 opacity-0 transition-opacity duration-200;
   }
@@ -35,6 +39,30 @@
 
   .select-box.in.visible {
     @apply opacity-100 translate-y-0;
+  }
+
+  .multiple-select-box {
+    @apply absolute top-full mt-2 -translate-y-4 sidebar-shadow left-0 w-full overflow-auto z-10 outline-none border border-solid border-[#F0F0F0] rounded-[5px] bg-white opacity-0 transition-all duration-150;
+  }
+
+  .multiple-select-box.in.visible {
+    @apply opacity-100 translate-y-0;
+  }
+
+  .trash-active {
+    @apply opacity-0 transition-opacity;
+  }
+
+  .trash-inactive {
+    @apply transition-opacity;
+  }
+
+  .trash-selector:hover .trash-active {
+    @apply opacity-100;
+  }
+
+  .trash-selector:hover .trash-inactive {
+    @apply opacity-0;
   }
 }
 

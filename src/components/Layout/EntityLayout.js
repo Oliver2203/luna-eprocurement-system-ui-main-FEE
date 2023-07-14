@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { Suspense } from 'react';
 
 function EntityLayout({ children }) {
   return (
@@ -26,7 +27,7 @@ function EntityLayout({ children }) {
             </NavLink>
           </div>
           <div className="line opacity-90"></div>
-          {children}
+          <Suspense>{children}</Suspense>
         </div>
       </div>
     </div>

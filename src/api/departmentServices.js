@@ -29,3 +29,18 @@ export const setUserDepartment = async (token, code, userEmail) => {
     return undefined;
   }
 };
+
+export const deleteDepartment = async (token, code) => {
+  const DEPARTMENT_URL = `/api/department/${code}`;
+
+  try {
+    await axios.delete(DEPARTMENT_URL, {
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      withCredentials: true,
+    });
+    return true;
+  } catch (err) {
+    console.log(!err?.res);
+    return undefined;
+  }
+};

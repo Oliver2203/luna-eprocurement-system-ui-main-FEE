@@ -101,7 +101,7 @@ const TEAM_LIST = ['Team A', 'Team B'];
 const ROLE_LIST = [
   { roleCode: 1, roleName: 'ADMINISTRATOR' },
   { roleCode: 2, roleName: 'MANAGER' },
-  { roleCode: 3, roleName: 'MEMBERS' },
+  { roleCode: 3, roleName: 'MEMBER' },
   { roleCode: 4, roleName: 'VIEWER' },
   { roleCode: 5, roleName: 'SUPERVISOR' },
 ];
