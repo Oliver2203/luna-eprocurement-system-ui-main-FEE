@@ -1,49 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import ActionButton from './ActionButton';
 import handleInput from '~/utils/validator';
-import { useDispatch } from 'react-redux';
-import { setVendor } from '~/features/data/vendorSlice';
+import { useParams } from 'react-router-dom';
+import { patchVendorPrice } from '~/api/productService';
+import useToken from '~/utils/useToken';
 
-const VendorEdit = React.memo(({ name, price, id }) => {
-  const [editName, setEditName] = useState('');
+const VendorEdit = React.memo(({ name, price, vendorCode, legalEntityCode, toggleAddState }) => {
+  const { token } = useToken();
   const [editPrice, setEditPrice] = useState('');
-  const [error, setError] = useState({
-    name: '',
-    price: '',
-  });
+  const [error, setError] = useState('');
 
   const [edit, setEdit] = useState(false);
 
-  const dispatch = useDispatch();
+  const { productCode } = useParams();
 
   useEffect(() => {
-    setError({
-      name: '',
-      price: '',
-    });
-  }, [editName, editPrice]);
+    setError('');
+  }, [editPrice]);
 
-  const handleSubmit = () => {
-    const nameError = handleInput(editName, 'required');
+  const handleSubmit = async () => {
     const priceError = handleInput(editPrice, 'required');
 
-    setError({ name: nameError, price: priceError });
+    setError(priceError);
 
-    if (nameError === undefined && priceError === undefined) {
-      dispatch(setVendor({ name: editName, price: editPrice, id }));
-      setEditName('');
-      setEditPrice('');
-      setEdit(false);
+    if (priceError === undefined) {
+      console.log(token)
+      const res = await patchVendorPrice(token, legalEntityCode, productCode, vendorCode, editPrice);
+
+      if (res) {
+        setEditPrice('');
+        setEdit(false);
+        toggleAddState();
+      }
     }
   };
 
   const handleCancel = () => {
-    setEditName('');
     setEditPrice('');
-    setError({
-      name: '',
-      price: '',
-    });
+    setError('');
     setEdit(false);
   };
   return (
@@ -51,23 +45,20 @@ const VendorEdit = React.memo(({ name, price, id }) => {
       {!edit ? (
         <>
           <h3 className="font-inter font-semibold leading-6 text-black flex justify-center py-[50px]">{name}</h3>
-          <h3 className="font-inter font-semibold leading-6 text-black flex justify-center items-center">{price}</h3>
+          <h3 className="font-inter font-semibold leading-6 text-black flex justify-center items-center">
+            {Number(price).toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              minimumFractionDigits: 2,
+            })}
+          </h3>
           <div className="flex justify-center items-center">
             <ActionButton type="edit" onClick={() => setEdit(true)} />
           </div>
         </>
       ) : (
         <>
-          <div className="py-8 flex flex-col items-center">
-            <input
-              type="text"
-              value={editName}
-              onChange={(ev) => setEditName(ev.target.value)}
-              className="w-[152px] p-4 font-inter font-semibold leading-6 text-black outline-none border-solid border-[2px] border-primary rounded-lg"
-              placeholder={name}
-            />
-            <p className="text-sm text-red font-light">{error.name}</p>
-          </div>
+          <h3 className="font-inter font-semibold leading-6 text-black flex justify-center py-[50px]">{name}</h3>
           <div className="flex flex-col justify-center items-center">
             <input
               type="text"
@@ -76,7 +67,7 @@ const VendorEdit = React.memo(({ name, price, id }) => {
               className="w-[152px] p-4 font-inter font-semibold leading-6 text-black outline-none border-solid border-[2px] border-primary rounded-lg"
               placeholder={price}
             />
-            <p className="text-sm text-red font-light">{error.price}</p>
+            <p className="text-sm text-red font-light">{error}</p>
           </div>
           <div className="flex justify-center items-center gap-4">
             <ActionButton type="done" onClick={handleSubmit} />

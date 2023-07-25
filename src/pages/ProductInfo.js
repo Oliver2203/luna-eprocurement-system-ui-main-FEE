@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { getProductPrices } from '~/api/productService';
+import { getProductInfo } from '~/api/productService';
+import Modal from '~/components/Modal';
+import ModalAddPrice from '~/components/ModalAddPrice';
 import VendorEdit from '~/components/VendorEdit';
-import { fetchProductList } from '~/features/actions/productListAction';
+import useMountTransition from '~/utils/useMountTransition';
 import useToken from '~/utils/useToken';
 
 const ProductInfo = React.memo(() => {
@@ -11,27 +13,38 @@ const ProductInfo = React.memo(() => {
 
   const { productCode } = useParams();
 
-  const { vendors } = useSelector((state) => state.vendor);
-  const { productList } = useSelector((state) => state.productList);
   const { userInfo } = useSelector((state) => state.userInfo);
 
-  const dispatch = useDispatch();
+  const [productDetails, setProductDetails] = useState({});
+  const [modalState, setModalState] = useState(false);
+  const [addState, setAddState] = useState(false);
+
+  const hasTransitionedIn = useMountTransition(modalState, 200);
+
+  const legalEntityCode = userInfo?.legalEntityCode;
 
   useEffect(() => {
-    const legalEntityCode = userInfo.legalEntityCode;
+    const fetchProductInfo = async () => {
+      const res = await getProductInfo(token, legalEntityCode, productCode);
 
-    if (!productList) {
-      dispatch(fetchProductList({ token, legalEntityCode }));
-    }
-    const getPrices = async () => {
-      const alo = await getProductPrices(token, legalEntityCode, productCode);
-      console.log('Hi', alo);
+      if (res) {
+        setProductDetails(res);
+      }
     };
-    getPrices();
+    if (legalEntityCode ) {
+      fetchProductInfo();
+    }
+    
     // eslint-disable-next-line
-  }, []);
+  }, [addState, legalEntityCode]);
 
-  const productDetails = productList?.find((product) => product?.code === productCode);
+  const handleCloseModal = () => {
+    setModalState(false);
+  };
+
+  const toggleAddState = () => {
+    setAddState(!addState);
+  };
 
   return (
     <div className="pl-[85px] pr-[152px] pt-9">
@@ -86,7 +99,7 @@ const ProductInfo = React.memo(() => {
             <div className="line"></div>
             <div className="flex justify-between">
               <p className="font-inter font-medium text-sm leading-6 text-black">Dimensions</p>
-              <p className="font-inter font-medium text-sm leading-6 text-black">{`${productDetails?.dimension.width}, ${productDetails?.dimension.height}, ${productDetails?.dimension.length}`}</p>
+              <p className="font-inter font-medium text-sm leading-6 text-black">{`${productDetails?.dimension?.width}, ${productDetails?.dimension?.height}, ${productDetails?.dimension?.length}`}</p>
             </div>
             <div className="line"></div>
             <div className="flex justify-between">
@@ -109,10 +122,18 @@ const ProductInfo = React.memo(() => {
       <div className="mt-5">
         <h2 className="text-black font-inter text-2xl font-semibold">Vendor Lists</h2>
         <div className="flex justify-end">
-          <p className="text-primary cursor-pointer px-6 py-2 rounded-[32px] border border-solid border-primary">
+          <button
+            onClick={() => setModalState(true)}
+            className="text-primary text-[15px] font-inter cursor-pointer px-6 py-2 rounded-[32px] border border-solid border-primary hover:bg-primary hover:text-white transition-all duration-150"
+          >
             + Add new vendor
-          </p>
+          </button>
         </div>
+        {(modalState || hasTransitionedIn) && (
+          <Modal handleClose={handleCloseModal} hasTransitionedIn={hasTransitionedIn} active={modalState}>
+            <ModalAddPrice handleClose={handleCloseModal} toggleAddState={toggleAddState} />
+          </Modal>
+        )}
         <div className="w-full bg-white border border-solid border-gray-300 mt-10 px-9 rounded-[10px]">
           <div className="w-full grid grid-cols-3 py-[18px]">
             <h3 className="flex justify-center font-inter font-semibold leading-6 text-black">Vendor</h3>
@@ -120,14 +141,24 @@ const ProductInfo = React.memo(() => {
             <h3 className="flex justify-center font-inter font-semibold leading-6 text-black">Action</h3>
           </div>
           <div className="line"></div>
-          {vendors.map((vendor, idx) => {
-            return (
-              <div className="contents" key={vendor.id}>
-                <VendorEdit name={vendor.name} price={vendor.price} id={vendor.id} />
-                {idx !== vendors.length - 1 && <div className="line"></div>}
-              </div>
-            );
-          })}
+          {productDetails?.providedVendorInfo?.length === 0 ? (
+            <p className="flex justify-center py-4 font-medium font-inter">No vendor to show</p>
+          ) : (
+            productDetails?.providedVendorInfo?.map((vendor, idx) => {
+              return (
+                <div className="contents" key={vendor.vendorCode}>
+                  <VendorEdit
+                    name={vendor.vendorName}
+                    price={vendor.price}
+                    vendorCode={vendor.vendorCode}
+                    legalEntityCode={legalEntityCode}
+                    toggleAddState={toggleAddState}
+                  />
+                  {idx !== productDetails?.providedVendorInfo?.length - 1 && <div className="line"></div>}
+                </div>
+              );
+            })
+          )}
         </div>
         <div className="pb-10"></div>
       </div>

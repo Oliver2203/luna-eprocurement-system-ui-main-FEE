@@ -125,7 +125,7 @@ function Routing() {
       ),
     },
     {
-      path: '/vendor-list/:vendorID',
+      path: '/vendor-list/:vendorCode',
       element: (
         <PrivateRoute>
           <DefaultLayout>

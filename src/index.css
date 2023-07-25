@@ -25,6 +25,14 @@
     grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
   }
 
+  .vendors-list-columns {
+    grid-template-columns: 2.8fr 1fr 1.2fr 1fr 1fr;
+  }
+
+  .vendor-info-columns {
+    grid-template-columns: 1fr 0.8fr 1fr 0.4fr;
+  }
+
   .modal {
     @apply fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-30 opacity-0 transition-opacity duration-200;
   }

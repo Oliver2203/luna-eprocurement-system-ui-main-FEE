@@ -2,12 +2,12 @@ import React, { useRef, useState } from 'react';
 import { createVendor } from '~/api/vendorService';
 import useToken from '~/utils/useToken';
 
-const ModalAddVendor = React.memo(({ handleClose }) => {
+const ModalAddVendor = React.memo(({ handleClose, toggleAddState }) => {
   const { token } = useToken();
 
-  const [name, setName] = useState('');
-  const [vendorCode, setVendorCode] = useState('');
-  const [bussinessNumber, setBussinessNumber] = useState('');
+  const [businessName, setBusinessName] = useState('');
+  const [businessNumber, setBusinessNumber] = useState('');
+  const [code, setCode] = useState('');
 
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
@@ -32,14 +32,15 @@ const ModalAddVendor = React.memo(({ handleClose }) => {
 
   const handleSubmit = async () => {
     const vendor = {
-      name,
-      code: vendorCode,
-      bussinessNumber,
+      businessName,
+      businessNumber,
+      code,
     };
 
     const res = await createVendor(token, vendor);
 
     if (res) {
+      toggleAddState();
       handleClose();
     }
   };
@@ -86,22 +87,22 @@ const ModalAddVendor = React.memo(({ handleClose }) => {
           type="text"
           placeholder="Name"
           className="w-full font-inter p-4 outline-none border border-solid border-[#F0F0F0] rounded-[5px] placeholder:text-[#637381]"
-          value={name}
-          onChange={(ev) => setName(ev.target.value)}
+          value={businessName}
+          onChange={(ev) => setBusinessName(ev.target.value)}
         />
         <input
           type="text"
           placeholder="Vendor Code"
           className="w-full font-inter p-4 outline-none border border-solid border-[#F0F0F0] rounded-[5px] placeholder:text-[#637381]"
-          value={vendorCode}
-          onChange={(ev) => setVendorCode(ev.target.value)}
+          value={code}
+          onChange={(ev) => setCode(ev.target.value)}
         />
         <input
           type="text"
-          placeholder="Bussiness Number"
+          placeholder="Business Number"
           className="w-full font-inter p-4 outline-none border border-solid border-[#F0F0F0] rounded-[5px] placeholder:text-[#637381]"
-          value={bussinessNumber}
-          onChange={(ev) => setBussinessNumber(ev.target.value)}
+          value={businessNumber}
+          onChange={(ev) => setBusinessNumber(ev.target.value)}
         />
       </div>
       <button

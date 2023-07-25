@@ -1,11 +1,27 @@
 import React from 'react';
 
-function Pagination({ totalItems, itemsPerPage, setCurrentPage, currentPage }) {
+function Pagination({ totalPages, searchParams, setSearchParams }) {
   let pages = [];
 
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const currentPage = searchParams.get('page') || 1;
 
-  if (totalPages <= 1) {
+  const handlePreviousPage = () => {
+    if (Number(currentPage) !== 1) {
+      setSearchParams({ ...searchParams, page: Number(currentPage) - 1 });
+    }
+  };
+
+  const handleNextPage = () => {
+    if (Number(currentPage) !== totalPages) {
+      setSearchParams({ ...searchParams, page: Number(currentPage) + 1 });
+    }
+  };
+
+  const setCurrentPage = (page) => {
+    setSearchParams({ ...searchParams, page });
+  };
+
+  if (totalPages <= 1 || currentPage > totalPages) {
     return null;
   }
 
@@ -13,25 +29,13 @@ function Pagination({ totalItems, itemsPerPage, setCurrentPage, currentPage }) {
     pages.push(i);
   }
 
-  const handlePreviousPage = () => {
-    if (currentPage !== 1) {
-      setCurrentPage((prevState) => prevState - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (currentPage !== totalPages) {
-      setCurrentPage((prevState) => prevState + 1);
-    }
-  };
-
   return (
     <div className="flex items-center justify-center bg-white">
       <div className="flex p-4 gap-3 border border-solid border-gray-50 rounded-md">
         <button
           className={
             'flex items-center justify-center w-[35px] h-[35px] border border-solid border-gray-50 rounded-md ' +
-            (currentPage === 1 && 'opacity-50 cursor-default')
+            (Number(currentPage) === 1 && 'opacity-50 cursor-default')
           }
           onClick={handlePreviousPage}
         >
@@ -43,7 +47,7 @@ function Pagination({ totalItems, itemsPerPage, setCurrentPage, currentPage }) {
               key={idx}
               className={
                 'flex items-center justify-center w-[35px] h-[35px] border border-solid rounded-md ' +
-                (currentPage === page ? 'text-white bg-primary border-primary' : 'border-gray-50 text-mainText')
+                (Number(currentPage) === page ? 'text-white bg-primary border-primary' : 'border-gray-50 text-mainText')
               }
               onClick={() => setCurrentPage(page)}
             >
@@ -54,7 +58,7 @@ function Pagination({ totalItems, itemsPerPage, setCurrentPage, currentPage }) {
         <button
           className={
             'flex items-center justify-center w-[35px] h-[35px] border border-solid border-gray-50 rounded-md ' +
-            (currentPage === totalPages && 'opacity-50 cursor-default')
+            (Number(currentPage) === totalPages && 'opacity-50 cursor-default')
           }
           onClick={handleNextPage}
         >

@@ -1,4 +1,6 @@
-const SearchBox = ({ search, setSearch, placeholder }) => {
+import { Link } from 'react-router-dom';
+
+const SearchBox = ({ search, setSearch, searchResult, api, placeholder }) => {
   return (
     <div className="relative">
       <input
@@ -9,6 +11,42 @@ const SearchBox = ({ search, setSearch, placeholder }) => {
         onChange={(ev) => setSearch(ev.target.value)}
       />
       <img src="/images/icons/magnifying.svg" alt="" className="absolute top-1/2 -translate-y-1/2 left-6" />
+      {searchResult && searchResult?.length !== 0 && (
+        <div className="absolute top-full left-0 w-full bg-white rounded-lg border border-solid border-gray-300 mt-2 z-30">
+          <div className="flex flex-col gap-2 p-4">
+            <p className="font-inter font-semibold text-lg text-black">Search results</p>
+            <div className="flex flex-col gap-2">
+              {searchResult?.map((result) => {
+                return (
+                  <Link
+                    key={result?.code}
+                    to={`/${api}/${result?.code}`}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <img src="/images/product-1.png" alt="" className="w-[40px]" />
+                    <div className="flex flex-col gap-1">
+                      <p className="font-inter font-semibold text-lg text-black">
+                        {result?.name || result?.bussinessName}
+                      </p>
+                      <p className="font-inter font-medium text-[#637381]">{result?.description || result?.code}</p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+      {searchResult?.length === 0 && (
+        <div className="absolute top-full left-0 w-full bg-white rounded-lg border border-solid border-gray-300 mt-2 z-30">
+          <div className="flex flex-col gap-2 p-4">
+            <p className="font-inter font-semibold text-lg text-black">Search results</p>
+            <div className="flex flex-col gap-2">
+              <p className="font-inter font-medium text-center text-lg text-black">No results found</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

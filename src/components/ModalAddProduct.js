@@ -1,15 +1,12 @@
 import React, { useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { createProduct } from '~/api/productService';
-import { addProduct } from '~/features/data/productListSlice';
 import useToken from '~/utils/useToken';
 
-const ModalAddProduct = React.memo(({ handleClose }) => {
+const ModalAddProduct = React.memo(({ handleClose, toggleAddState }) => {
   const { token } = useToken();
 
   const { userInfo } = useSelector((state) => state.userInfo);
-
-  const dispatch = useDispatch();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -71,7 +68,7 @@ const ModalAddProduct = React.memo(({ handleClose }) => {
     const res = await createProduct(token, product);
 
     if (res) {
-      dispatch(addProduct(product));
+      toggleAddState();
       handleClose();
     }
   };
