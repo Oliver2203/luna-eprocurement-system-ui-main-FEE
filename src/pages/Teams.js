@@ -89,10 +89,10 @@ const Teams = React.memo(() => {
         </h3>
       </div>
       <div className="line"></div>
-      <div className="grid grid-cols-3 px-11 bg-white pr-56">
-        {!entity && <div>An error has occured</div>}
-        {entity &&
-          entity.departments?.map((department) => (
+      {!entity && <div>An error has occured</div>}
+      {entity && entity.departments?.length !== 0 ? (
+        entity.departments?.map((department) => (
+          <div className="grid grid-cols-3 px-11 bg-white pr-56">
             <div key={department.departmentCode} className="contents">
               <div className="flex items-center text-mainText text-sm font-inter h-20">{department.departmentName}</div>
               <div className="flex flex-col gap-3 justify-center items-center text-mainText text-sm font-inter">
@@ -122,8 +122,11 @@ const Teams = React.memo(() => {
                 </Modal>
               )}
             </div>
-          ))}
-      </div>
+          </div>
+        ))
+      ) : (
+        <p className="py-4 text-center font-semibold font-inter">No departments added</p>
+      )}
       {/* <div className="pt-5 bg-white" /> */}
     </div>
   );

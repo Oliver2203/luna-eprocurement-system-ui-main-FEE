@@ -56,7 +56,7 @@ export const getVendorInfo = async (token, vendorCode) => {
       withCredentials: true,
     });
 
-    return res.data;
+    return res.data.data;
   } catch (err) {
     console.log(!err?.res);
     return undefined;

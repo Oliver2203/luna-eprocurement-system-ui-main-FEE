@@ -99,7 +99,7 @@ const ModalAddVendor = React.memo(({ handleClose, toggleAddState }) => {
         />
         <input
           type="text"
-          placeholder="Business Number"
+          placeholder="Bussiness Number"
           className="w-full font-inter p-4 outline-none border border-solid border-[#F0F0F0] rounded-[5px] placeholder:text-[#637381]"
           value={businessNumber}
           onChange={(ev) => setBusinessNumber(ev.target.value)}

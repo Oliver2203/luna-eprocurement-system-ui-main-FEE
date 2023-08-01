@@ -138,8 +138,9 @@ const ProductList = React.memo(() => {
                     {product?.code}
                   </div>
                   <div className="flex flex-col justify-center items-baseline gap-3">
-                    <VendorTag tag={'Vendor A'} />
-                    <VendorTag tag={'Vendor B'} />
+                    {product?.providedVendorInfo?.map((vendor) => {
+                      return <VendorTag key={vendor?.vendorCode} tag={vendor?.vendorName} />;
+                    })}
                   </div>
                   <div className="flex items-center">
                     <div

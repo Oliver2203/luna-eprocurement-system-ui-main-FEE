@@ -40,7 +40,7 @@ export const getProductInfo = async (token, legalEntityCode, productCode) => {
       withCredentials: true,
     });
 
-    return res.data;
+    return res.data.data;
   } catch (err) {
     console.log(!err?.res);
     return undefined;
@@ -82,10 +82,14 @@ export const patchVendorPrice = async (token, legalEntityCode, productCode, vend
   const VENDOR_URL = `/api/product/${legalEntityCode}/${productCode}/${vendorCode}/${price}`;
 
   try {
-    await axios.patch(VENDOR_URL, {}, {
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      withCredentials: true,
-    });
+    await axios.patch(
+      VENDOR_URL,
+      {},
+      {
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      },
+    );
     return true;
   } catch (err) {
     console.log(!err?.res);

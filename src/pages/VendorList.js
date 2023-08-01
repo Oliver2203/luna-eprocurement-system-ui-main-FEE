@@ -91,12 +91,12 @@ const VendorList = React.memo(() => {
         <div className="grid vendors-list-columns w-full">
           <h3 className="font-inter text-black font-semibold leading-6 py-[18px] flex items-center">Product</h3>
           <h3 className="font-inter text-black font-semibold leading-6 py-[18px] flex items-center">Vendor Code</h3>
-          <h3 className="font-inter text-black font-semibold leading-6 py-[18px] flex items-center">Bussines Number</h3>
+          <h3 className="font-inter text-black font-semibold leading-6 py-[18px] flex items-center">Business Number</h3>
           <h3 className="font-inter text-black font-semibold leading-6 py-[18px] flex items-center">Group</h3>
           <h3 className="font-inter text-black font-semibold leading-6 py-[18px] flex items-center">Action</h3>
         </div>
         <div className="line"></div>
-        {vendorsList?.data.length !== 0 &&
+        {vendorsList?.data.length !== 0 ? (
           vendorsList?.data?.map((vendor, idx) => (
             <div key={idx} className="grid vendors-list-columns w-full">
               <div className="flex items-center my-[30px]">
@@ -118,7 +118,10 @@ const VendorList = React.memo(() => {
                 </div>
               </div>
             </div>
-          ))}
+          ))
+        ) : (
+          <p className="py-4 text-center font-inter font-semibold">No vendor added</p>
+        )}
       </div>
       <div className="mt-7 flex items-center justify-center">
         <Pagination

@@ -31,10 +31,9 @@ const ProductInfo = React.memo(() => {
         setProductDetails(res);
       }
     };
-    if (legalEntityCode ) {
+    if (legalEntityCode) {
       fetchProductInfo();
     }
-    
     // eslint-disable-next-line
   }, [addState, legalEntityCode]);
 

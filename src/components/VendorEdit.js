@@ -24,7 +24,6 @@ const VendorEdit = React.memo(({ name, price, vendorCode, legalEntityCode, toggl
     setError(priceError);
 
     if (priceError === undefined) {
-      console.log(token)
       const res = await patchVendorPrice(token, legalEntityCode, productCode, vendorCode, editPrice);
 
       if (res) {
@@ -52,8 +51,9 @@ const VendorEdit = React.memo(({ name, price, vendorCode, legalEntityCode, toggl
               minimumFractionDigits: 2,
             })}
           </h3>
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center gap-4">
             <ActionButton type="edit" onClick={() => setEdit(true)} />
+            <ActionButton type="delete" />
           </div>
         </>
       ) : (
