@@ -1,0 +1,18 @@
+stages:
+  - build
+  - deploy
+build:
+  stage: build
+  script:
+    - docker image build -t fe-image .
+  tags:
+    - luna-runner
+deploy:
+   stage: deploy
+   script:
+     - docker stop fe || true && docker rm fe || true
+     - docker run -d --name fe -p 3000:3000 -it fe-image
+   tags:
+    - luna-runner
+   only:
+    - main
