@@ -13,6 +13,6 @@ deploy:
      - docker stop fe || true && docker rm fe || true
      - docker run -d --name fe -p 3000:3000 -it fe-image
    tags:
-    - local-runner
+    - luna-runner
    only:
     - main
