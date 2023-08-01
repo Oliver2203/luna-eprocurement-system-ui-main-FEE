@@ -6,7 +6,7 @@ build:
   script:
     - docker image build -t fe-image .
   tags:
-    - local-runner
+    - luna-runner
 deploy:
    stage: deploy
    script:
