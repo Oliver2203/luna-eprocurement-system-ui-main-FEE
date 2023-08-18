@@ -33,6 +33,10 @@
     grid-template-columns: 1fr 0.8fr 1fr 0.4fr;
   }
 
+  .projects-list-columns {
+    grid-template-columns: 1.4fr 1fr 1fr 1fr 0.6fr;
+  }
+
   .modal {
     @apply fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-30 opacity-0 transition-opacity duration-200;
   }
